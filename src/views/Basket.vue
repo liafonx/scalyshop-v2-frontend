@@ -8,8 +8,7 @@
       <b-row>
         <b-col cols="12" class="box">
           <b-form-group
-                id="button-group"
-                description="Once you confirm your order, your cart will be cleared">
+                id="button-group">
             <b-button class="button" variant="outline-secondary" type="button" style="margin-right: 10px" @click="clearOrder()">Clear Cart</b-button>
             <b-button class="button" type="button" @click="confirmOrder()">Confirm total: {{this.total}}kr </b-button>
           </b-form-group>
@@ -21,7 +20,6 @@
 
 <script>
 import { Api } from '@/Api'
-import OrderItem from '@/components/OrderItem'
 
 export default {
   name: 'Orders',
@@ -129,9 +127,6 @@ export default {
           console.log(error)
         })
     }
-  },
-  components: {
-    OrderItem
   }
 }
 </script>

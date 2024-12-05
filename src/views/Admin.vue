@@ -56,10 +56,6 @@
       <b-row>
         <b-col cols="12" class="box">
 
-          <b-toast id="monitoring-toast" title="Notification" static no-auto-hide>
-            {{ monitoring_message }}
-          </b-toast>
-
           <b-form-group
                 id="button-group"
                 label="Data Helpers:"
@@ -79,6 +75,7 @@
                 <b-col cols="6">
                   <b-button class="button" type="button" @click="generateFault(404)">Trigger 404 Fault</b-button>
                   <b-button class="button" type="button" @click="generateFault(500)">Trigger 500 Fault</b-button>
+                  <b-button class="button" type="button" @click="killBackend()">Crash Backend</b-button>
                 </b-col>
                 <b-col cols="6">
                   <b-button class="button" type="button" @click="generateLoad()">Trigger Long-Running Request</b-button>
@@ -132,8 +129,7 @@ export default {
       },
       addView: false,
       showAlert: false,
-      loadparam: 100,
-      monitoring_message: ''
+      loadparam: 100
     }
   },
   computed: {
@@ -219,8 +215,6 @@ export default {
         .catch(error => {
           console.log(error)
         })
-      this.monitoring_message = 'Database cleared'
-      this.$bvToast.show('monitoring-toast')
     },
     addTestData() {
       Api.post('products/testdata')
@@ -230,8 +224,6 @@ export default {
         .catch(error => {
           console.log(error)
         })
-      this.monitoring_message = 'Batch-added test data'
-      this.$bvToast.show('monitoring-toast')
     },
     generateLoad() {
       Api.post('products/stress?loadparam=' + this.loadparam)
@@ -241,8 +233,6 @@ export default {
         .catch(error => {
           console.log(error)
         })
-      this.monitoring_message = 'Added ' + this.loadparam + ' test elements'
-      this.$bvToast.show('monitoring-toast')
     },
     removeStressTestData() {
       Api.post('products/unstress')
@@ -252,8 +242,6 @@ export default {
         .catch(error => {
           console.log(error)
         })
-      this.monitoring_message = 'Removed all test elements'
-      this.$bvToast.show('monitoring-toast')
     },
     generateFault(statuscode) {
       Api.post('error?statuscode=' + statuscode)
@@ -263,8 +251,15 @@ export default {
         .catch(error => {
           console.log('Received expected error: ' + error)
         })
-      this.monitoring_message = 'Generated ' + statuscode + ' request'
-      this.$bvToast.show('monitoring-toast')
+    },
+    killBackend() {
+      Api.post('crash')
+        .then(response => {
+          console.log('Something is wrong - expected an error')
+        })
+        .catch(error => {
+          console.log('Received expected error: ' + error)
+        })
     }
   }
 }

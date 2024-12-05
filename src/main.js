@@ -1,17 +1,20 @@
-import Vue from 'vue'
+
+import { createApp } from 'vue'
+import { createBootstrap } from 'bootstrap-vue-next'
 import App from './App.vue'
 import router from './router'
-import { BootstrapVue, BVToastPlugin } from 'bootstrap-vue'
 
 import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
+import 'bootstrap-vue-next/dist/bootstrap-vue-next.css'
 
-Vue.use(BootstrapVue)
-Vue.use(BVToastPlugin)
+import ProductItem from './components/OrderItem.vue'
+import OrderItem from './components/OrderItem.vue'
 
-Vue.config.productionTip = false
+const app = createApp(App)
+app.use(createBootstrap())
+app.use(router)
 
-new Vue({
-  router,
-  render: function (h) { return h(App) }
-}).$mount('#app')
+app.component('ProductItem', ProductItem)
+app.component('OrderItem', OrderItem)
+
+app.mount('#app')

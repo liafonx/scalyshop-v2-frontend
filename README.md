@@ -8,7 +8,7 @@ This [Vue.js](https://vuejs.org/) template provides sample code how to connect t
 | ------------- | ------------- | ----- |
 | [README.md](./README.md) | Everything about the client | **READ ME** carefully! |
 | [public/favicon.ico](public/favicon.ico) | [Favicon](https://en.wikipedia.org/wiki/Favicon) website icon | — |
-| [public/index.html](public/index.html) | Static HTML entry point page | — |
+| [index.html](index.html) | Static HTML entry point page | — |
 | [src/](src/) | src (i.e., source code) | All your code goes in here |
 | [src/Api.js](src/Api.js) | Configures HTTP library to communicate with backend | — |
 | [src/App.vue](src/App.vue) | Main Vue layout template for all view (or pages) | Change your global template for all views |
@@ -19,15 +19,14 @@ This [Vue.js](https://vuejs.org/) template provides sample code how to connect t
 | [src/router.js](src/router.js) | Vue routes configuration | Register new routes/pages/views |
 | [src/views/Home.vue](src/views/Home.vue) | Home page/view | Replace with your home page/view |
 | [package.json](package.json) | Project meta-information | —|
-| [vue.config.js](vue.config.js) | Vue configuration | — |
+| [vite.config.js](vite.config.js) | Vue configuration | — |
 
 ## Requirements
 
-* [Server](../server/README.md) backend running on `http://localhost:5000`
+* [Server](../server/README.md) backend running on `http://localhost:5045`
 * [Node.js](https://nodejs.org/en/download/) => installation instructions for [Linux](https://github.com/nodesource/distributions)
 * [Visual Studio Code (VSCode)](https://code.visualstudio.com/) as IDE
   * [Vetur](https://marketplace.visualstudio.com/items?itemName=octref.vetur) plugin for Vue tooling
-  * [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) plugin for linting Vue, JS, and HTML code
   * [Debugger for Chrome](https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome) plugin for debugging
 * [Google Chrome](https://www.google.com/chrome/) as web browser
   * [Vue.js devtools](https://chrome.google.com/webstore/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd?hl=en) plugin for debugging
@@ -66,17 +65,6 @@ npm run build
 ## Axios HTTP Library
 
 * [Documentation with Examples](https://github.com/axios/axios#axios)
-
-## Bootstrap 4 and BootstrapVue
-
-* [BootstrapVue Components](https://bootstrap-vue.js.org/docs/components)
-  * [Layout and Grid System](https://bootstrap-vue.js.org/docs/components/layout/)
-  * [Link](https://bootstrap-vue.js.org/docs/components/link)
-  * [Button](https://bootstrap-vue.js.org/docs/components/button)
-  * [Form](https://bootstrap-vue.js.org/docs/components/form)
-* [BootstrapVue Online Playground](https://bootstrap-vue.js.org/play/)
-
-> Plain [Bootstrap 4](https://getbootstrap.com/) uses a popular JS library called [jQuery](http://jquery.com/) for dynamic components (e.g., dropdowns). However, using jQuery with Vue is [problematic](https://vuejsdevelopers.com/2017/05/20/vue-js-safely-jquery-plugin/) and therefore we use BootstrapVue here.
 
 ## Debug in VSCode with Chrome
 

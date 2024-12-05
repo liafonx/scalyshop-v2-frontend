@@ -28,7 +28,6 @@
 
 <script>
 import { Api } from '@/Api'
-import ProductItem from '@/components/ProductItem'
 
 export default {
   name: 'Products',
@@ -139,9 +138,6 @@ export default {
           console.log(error)
         })
     }
-  },
-  components: {
-    ProductItem
   }
 }
 </script>
