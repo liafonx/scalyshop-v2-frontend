@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # MongoDB Service
+  mongodb:
+    image: mongo
+    container_name: scalyshop-mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=scalyUser   # Database root username
+      - MONGO_INITDB_ROOT_PASSWORD=scalyPass   # Database root password
+      - MONGO_INITDB_DATABASE=scalyDB          # Initial database name
+
+  # Backend Service
+  backend:
+    build: ../scalyshop-v2-backend
+    container_name: scalyshop-backend
+    restart: always
+    depends_on:
+      - mongodb  # Ensures MongoDB is started before the backend
+    environment:
+      - MONGODB_HOST=scalyshop-mongo
+      - MONGODB_DB=scalyDB?authSource=admin   # Database name with authentication source
+      - MONGODB_USER=scalyUser                # MongoDB username
+      - MONGODB_PW=scalyPass                  # MongoDB password
+      - BACKEND_PORT=5045                      # Port where the backend will run
+    ports:
+      - "5045:5045"  # Exposing backend service on port 5045
+
+  # Frontend Service
+  frontend:
+    build: ../scalyshop-v2-frontend
+    container_name: scalyshop-frontend
+    restart: always
+    depends_on:
+      - backend  # Ensures the backend is started before the frontend
+    ports:
+      - "5173:5173"  # Exposing frontend service on port 5173
