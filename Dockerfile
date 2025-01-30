@@ -19,5 +19,3 @@ EXPOSE 5046
 CMD ["npm", "run", "serve"]
 
 #docker run --name scalyshop-v2-frontend -p 5046:5046 -d registry.git.chalmers.se/courses/dat490/students/2025/dat490-2025-9/scalyshop-v2-frontend
-#docker build -t registry.git.chalmers.se/courses/dat490/students/2025/dat490-2025-9/scalyshop-v2-frontend .
-#docker push registry.git.chalmers.se/courses/dat490/students/2025/dat490-2025-9/scalyshop-v2-frontend
