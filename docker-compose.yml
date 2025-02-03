@@ -15,7 +15,7 @@ services:
 
   # Backend Service
   backend:
-    build: ../scalyshop-v2-backend
+    image: registry.git.chalmers.se/courses/dat490/students/2025/dat490-2025-9/scalyshop-v2-backend
     container_name: scalyshop-backend
     restart: always
     depends_on:
@@ -31,10 +31,12 @@ services:
 
   # Frontend Service
   frontend:
-    build: ../scalyshop-v2-frontend
+    image: registry.git.chalmers.se/courses/dat490/students/2025/dat490-2025-9/scalyshop-v2-frontend
     container_name: scalyshop-frontend
     restart: always
     depends_on:
       - backend  # Ensures the backend is started before the frontend
+    environment:
+      - VITE_BACKEND_HOST=scalyshop-backend
     ports:
-      - "5173:5173"  # Exposing frontend service on port 5173
+      - "5046:5046"  # Exposing frontend service on port 5046
