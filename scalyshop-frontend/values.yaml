@@ -122,8 +122,3 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
-
-# backend host
-env:
-  VITE_BACKEND_HOST: "scalyshop-backend"
-  VITE_BACKEND_PORT: 5000

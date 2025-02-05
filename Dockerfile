@@ -12,6 +12,10 @@ RUN npm install
 # copy project files and folders to the current working directory (i.e. 'app' folder)
 COPY . .
 
+# set env
+ENV VITE_BACKEND_HOST=scalyshop-backend
+ENV VITE_BACKEND_PORT=5000
+
 # build app for production with minification
 RUN npm run build
 
