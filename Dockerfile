@@ -1,4 +1,4 @@
-FROM node:lts-alpine
+FROM --platform=linux/amd64 node:lts-alpine
 
 # make the 'app' folder the current working directory
 WORKDIR /app
@@ -15,7 +15,7 @@ COPY . .
 # build app for production with minification
 RUN npm run build
 
-EXPOSE 5046
+EXPOSE 80
 CMD ["npm", "run", "serve"]
 
 #docker run --name scalyshop-v2-frontend -p 5046:5046 -d registry.git.chalmers.se/courses/dat490/students/2025/dat490-2025-9/scalyshop-v2-frontend
