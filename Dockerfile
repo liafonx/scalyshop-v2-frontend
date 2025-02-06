@@ -13,7 +13,7 @@ RUN npm install
 COPY . .
 
 # set env
-ENV VITE_BACKEND_HOST=scalyshop-backend
+ENV VITE_BACKEND_HOST=34.88.60.239
 ENV VITE_BACKEND_PORT=5000
 
 # build app for production with minification
