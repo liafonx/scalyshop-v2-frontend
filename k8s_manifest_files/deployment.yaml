@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scalyshop-v2-frontend
+  labels:
+    app: ss-frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ss-frontend
+  template:
+    metadata:
+      labels:
+        app: ss-frontend
+    spec:
+      containers:
+        - name: scalyshop-v2-frontend
+          image: registry.git.chalmers.se/courses/dat490/students/2025/dat490-2025-9/scalyshop-v2-frontend
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5046
+      imagePullSecrets:
+            - name: regcred
