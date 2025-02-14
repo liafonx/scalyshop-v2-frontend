@@ -19,6 +19,7 @@ ENV VITE_BACKEND_HOST=${VITE_BACKEND_HOST}
 ENV VITE_BACKEND_PORT=5000
 
 RUN echo "VITE_BACKEND_HOST is: $VITE_BACKEND_HOST"
+RUN echo "VITE_BACKEND_PORT is: $VITE_BACKEND_PORT"
 
 # build app for production with minification
 RUN npm run build
