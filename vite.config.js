@@ -19,6 +19,6 @@ export default defineConfig({
   },
   preview: {
     host: '0.0.0.0',
-    port: process.env.FRONTEND_PORT || 80
+    port: process.env.FRONTEND_PORT || 5046
   }
 })
