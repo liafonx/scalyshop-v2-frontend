@@ -5,6 +5,7 @@ variables:
 
 stages:
   - build
+  # - test
   - deploy
 
 .default_rules: &default_rules
@@ -19,12 +20,11 @@ build-job:
     name: gcr.io/kaniko-project/executor:v1.23.2-debug
     entrypoint: [""]
   script:
-    - echo "VITE_BACKEND_HOST: $VITE_BACKEND_HOST"
-    - /kaniko/executor \
-        --context "${CI_PROJECT_DIR}" \
-        --build-arg VITE_BACKEND_HOST="${VITE_BACKEND_HOST}" \
-        --dockerfile "${CI_PROJECT_DIR}/Dockerfile" \
-        --destination "${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}"
+    - /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --build-arg VITE_BACKEND_HOST="${VITE_BACKEND_HOST}"  # Pass VITE_BACKEND_HOST to Dockerfile
+      --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
+      --destination "${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}"
 
 deploy-job:
   <<: *default_rules
@@ -32,7 +32,8 @@ deploy-job:
   image: alpine/helm:latest
   script:
     - echo "Deploying application with Helm..."
-    - helm upgrade --install scalyshop-frontend ./scalyshop-frontend \
+    - |
+      helm upgrade --install scalyshop-frontend ./scalyshop-frontend \
         --set image.repository=$CI_REGISTRY_IMAGE \
         --set image.tag=$CI_COMMIT_SHORT_SHA \
         --namespace scalyshop \
