@@ -19,8 +19,9 @@ build-job:
   image:
     name: gcr.io/kaniko-project/executor:v1.23.2-debug
     entrypoint: [""]
-  script:
+  before-script:
     - echo "VITE_BACKEND_HOST: ${VITE_BACKEND_HOST}"
+  script:
     - /kaniko/executor
       --context "${CI_PROJECT_DIR}"
       --build-arg VITE_BACKEND_HOST=${VITE_BACKEND_HOST}
