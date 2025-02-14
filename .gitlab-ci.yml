@@ -22,9 +22,9 @@ build-job:
   script:
     - /kaniko/executor
       --context "${CI_PROJECT_DIR}"
+      --build-arg VITE_BACKEND_HOST=${VITE_BACKEND_HOST}  # Pass VITE_BACKEND_HOST to Dockerfile
       --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
       --destination "${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}"
-      --build-arg VITE_BACKEND_HOST="${VITE_BACKEND_HOST}"  # Pass VITE_BACKEND_HOST to Dockerfile
 
 deploy-job:
   <<: *default_rules
