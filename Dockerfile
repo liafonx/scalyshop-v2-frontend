@@ -20,7 +20,7 @@ ENV VITE_BACKEND_PORT=5000
 RUN npm run build
 
 # Expose port 80 for the application
-EXPOSE 80
+EXPOSE 5046
 
 # Start the application
 CMD ["npm", "run", "serve"]
