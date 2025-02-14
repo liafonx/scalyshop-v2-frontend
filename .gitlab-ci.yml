@@ -1,7 +1,7 @@
 image: alpine:latest
 
 variables:
-  VITE_BACKEND_HOST: '35.228.179.101'  # Default value for VITE_BACKEND_HOST
+  VITE_BACKEND_HOST: '35.228.179.101'  # Default value for VITE_BACKEND_HOST 
 
 stages:
   - build
