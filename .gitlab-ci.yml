@@ -1,4 +1,4 @@
-image: alpine:latest
+#image: alpine:latest
 
 variables:
   AUTO_BUILD_IMAGE_VERSION: 'v4.3.0'
@@ -9,16 +9,16 @@ variables:
 stages:
   - build
   # - test
-  # - deploy
+  - deploy
 
 build-job:
   stage: build
-  image: '${CI_TEMPLATE_REGISTRY_HOST}/gitlab-org/cluster-integration/auto-build-image:${AUTO_BUILD_IMAGE_VERSION}'
+  image: 'registry.gitlab.com/gitlab-org/cluster-integration/auto-build-image:${AUTO_BUILD_IMAGE_VERSION}'
   services:
-    - name: 'docker:20.10.12-dind'
+    - name: 'docker:24.0.5-dind'
       command: ['--tls=false', '--host=tcp://0.0.0.0:2375']
   before_script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY    
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - |
       if [[ -z "$CI_COMMIT_TAG" ]]; then
@@ -30,13 +30,29 @@ build-job:
       fi
     - /build/build.sh
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_BRANCH == 'frontend-local'
   artifacts:
     reports:
       dotenv: gl-auto-build-variables.env
+    paths:
+      - /app/dist
 
 # test-job:
-#   TODO  
-
-# deploy-helm:
 #   TODO
+
+deploy-helm:
+  stage: deploy
+  image: dtzar/helm-kubectl
+  dependencies:
+    - build-job
+  before_script:
+    # Decode the base64-encoded kubeconfig from CI/CD variable and set it for kubectl/helm.
+    - echo "$KUBE_CONFIG" | base64 -d > kubeconfig
+    - export KUBECONFIG=$PWD/kubeconfig
+  script:
+    - echo "Deploying the application using Helm upgrade --install..."
+    - echo "${CI_APPLICATION_REPOSITORY}:${CI_APPLICATION_TAG}"
+    - helm upgrade --install scalyshop-frontend ./scalyshop-frontend --set image.repository="${CI_APPLICATION_REPOSITORY}",image.tag="${CI_APPLICATION_TAG}"
+    - kubectl rollout status deployment/scalyshop-frontend -n scalyshop --timeout=30s
+  rules:
+    - if: $CI_COMMIT_BRANCH == "frontend-local"
