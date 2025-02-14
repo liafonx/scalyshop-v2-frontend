@@ -19,7 +19,7 @@ build-job:
   image:
     name: gcr.io/kaniko-project/executor:v1.23.2-debug
     entrypoint: [""]
-  before-script:
+  before_script:
     - echo "VITE_BACKEND_HOST: ${VITE_BACKEND_HOST}"
   script:
     - /kaniko/executor
