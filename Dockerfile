@@ -13,7 +13,7 @@ RUN npm install
 COPY . .
 
 # Set environment variables for the frontend to connect to the backend service
-ENV VITE_BACKEND_HOST=backend.frontend.k8s.orb.local
+ENV VITE_BACKEND_HOST=backend.k8s.orb.local
 ENV VITE_BACKEND_PORT=80
 
 # build app for production with minification
