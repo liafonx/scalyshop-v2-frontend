@@ -13,8 +13,8 @@ RUN npm install
 COPY . .
 
 # Set environment variables for the frontend to connect to the backend service
-ENV VITE_BACKEND_HOST=192.168.194.247
-ENV VITE_BACKEND_PORT=5000
+ENV VITE_BACKEND_HOST=backend.198-19-249-2-nip.io
+ENV VITE_BACKEND_PORT=80
 
 # build app for production with minification
 RUN npm run build
