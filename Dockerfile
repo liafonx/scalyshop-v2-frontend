@@ -1,3 +1,5 @@
+ARG VITE_BACKEND_HOST
+
 FROM --platform=linux/amd64 node:lts-alpine
 
 # make the 'app' folder the current working directory
@@ -15,6 +17,8 @@ COPY . .
 # Set environment variables for the frontend to connect to the backend service
 ENV VITE_BACKEND_HOST=${VITE_BACKEND_HOST}
 ENV VITE_BACKEND_PORT=5000
+
+RUN echo "VITE_BACKEND_HOST is: $VITE_BACKEND_HOST"
 
 # build app for production with minification
 RUN npm run build
