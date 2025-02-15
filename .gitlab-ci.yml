@@ -25,7 +25,7 @@ build-job:
     - /kaniko/executor
       --context "${CI_PROJECT_DIR}"
       --build-arg VITE_BACKEND_HOST="35.228.179.101"
-      --build-arg VITE_IMAGE_TAG="${CI_COMMIT_SHORT_SHA}"
+      --build-arg VITE_IMAGE_TAG=testtt
       --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
       --custom-platform=linux/amd64
       --destination "${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}"
