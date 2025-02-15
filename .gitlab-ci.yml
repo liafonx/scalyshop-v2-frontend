@@ -15,6 +15,13 @@ stages:
   tags:
     - test  # Only run on runners with this tag
 
+env-job:
+  <<: *default_rules
+  stage: env
+  script:
+    - echo "VITE_BACKEND_HOST: ${VITE_BACKEND_HOST}"
+    - echo "CI_COMMIT_SHORT_SHA: ${CI_COMMIT_SHORT_SHA}"
+
 build-job:
   <<: *default_rules
   stage: build
