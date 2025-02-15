@@ -1,4 +1,5 @@
 ARG VITE_BACKEND_HOST
+ARG VITE_IMAGE_TAG
 
 FROM --platform=linux/amd64 node:lts-alpine
 
@@ -17,9 +18,11 @@ COPY . .
 # Set environment variables for the frontend to connect to the backend service
 ENV VITE_BACKEND_HOST=${VITE_BACKEND_HOST}
 ENV VITE_BACKEND_PORT=5000
+ENV VITE_IMAGE_TAG = ${VITE_IMAGE_TAG}
 
 RUN echo "VITE_BACKEND_HOST is: $VITE_BACKEND_HOST"
 RUN echo "VITE_BACKEND_PORT is: $VITE_BACKEND_PORT"
+RUN echo "VITE_IMAGE_TAG is:" $VITE_IMAGE_TAG
 
 # build app for production with minification
 RUN npm run build
