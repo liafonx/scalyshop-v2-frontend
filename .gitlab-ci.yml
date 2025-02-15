@@ -1,7 +1,7 @@
 image: alpine:latest
 
 variables:
-  VITE_BACKEND_HOST: '35.228.179.101'  # Default value for VITE_BACKEND_HOST 
+  VITE_BACKEND_HOST: "35.228.179.101" # Default value for VITE_BACKEND_HOST
 
 stages:
   - build
@@ -20,11 +20,10 @@ build-job:
     name: gcr.io/kaniko-project/executor:v1.23.2-debug
     entrypoint: [""]
   script:
-    - echo "VITE_BACKEND_HOST: ${VITE_BACKEND_HOST}"
     - /kaniko/executor
       --context "${CI_PROJECT_DIR}"
-      --build-arg VITE_BACKEND_HOST=${VITE_BACKEND_HOST}
-      --build-arg VITE_IMAGE_TAG=${CI_COMMIT_SHORT_SHA}
+      --build-arg "VITE_BACKEND_HOST=${VITE_BACKEND_HOST}"
+      --build-arg "VITE_IMAGE_TAG=${CI_COMMIT_SHORT_SHA}"
       --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
       --custom-platform=linux/amd64
       --destination "${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}"
