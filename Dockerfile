@@ -1,4 +1,4 @@
-ARG VITE_BACKEND_HOST
+ARG VITE_BACKEND_HOST = "35.228.179.101"
 ARG VITE_IMAGE_TAG
 
 FROM --platform=linux/amd64 node:lts-alpine
