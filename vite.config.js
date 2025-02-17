@@ -19,6 +19,7 @@ export default defineConfig({
   },
   preview: {
     host: '0.0.0.0',
-    port: process.env.FRONTEND_PORT || 80
+    port: process.env.FRONTEND_PORT || 80,
+    allowedHosts: ['.34-88-48-68.nip.io']
   }
 })
