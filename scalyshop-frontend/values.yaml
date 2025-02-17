@@ -68,7 +68,7 @@ ingress:
     - host: frontend.34-88-48-68.nip.io
       paths:
         - path: /
-          pathType: ImplementationSpecific
+          pathType: Prefix
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
