@@ -1,0 +1,54 @@
+image: alpine:latest
+
+variables:
+  VITE_BACKEND_HOST: "35.228.179.101" # Default value for VITE_BACKEND_HOST
+
+stages:
+  - env
+  - build
+  # - test
+  - deploy
+
+.default_rules: &default_rules
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_BRANCH == "feat-ci"
+    - if: $CI_COMMIT_BRANCH == "dev"
+  tags:
+    - test  # Only run on runners with this tag
+
+env-job:
+  <<: *default_rules
+  stage: env
+  script:
+    - echo "VITE_BACKEND_HOST ${VITE_BACKEND_HOST}"
+    - echo "CI_COMMIT_SHORT_SHA ${CI_COMMIT_SHORT_SHA}"
+
+build-job:
+  <<: *default_rules
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:v1.23.2-debug
+    entrypoint: [""]
+  script:
+    - /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --build-arg VITE_BACKEND_HOST=${VITE_BACKEND_HOST}
+      --build-arg VITE_IMAGE_TAG=${CI_COMMIT_SHORT_SHA}
+      --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
+      --custom-platform=linux/amd64
+      --destination "${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}"
+
+deploy-job:
+  <<: *default_rules
+  stage: deploy
+  image: alpine/helm:latest
+  script:
+    - echo "Deploying application with Helm..."
+    - |
+      helm upgrade --install scalyshop-frontend ./scalyshop-frontend \
+        --set image.repository=$CI_REGISTRY_IMAGE \
+        --set image.tag=$CI_COMMIT_SHORT_SHA \
+        --namespace scalyshop \
+        --wait --timeout 300s --debug
+  when: on_success
