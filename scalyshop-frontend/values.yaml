@@ -65,7 +65,7 @@ ingress:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: frontend.34-88-48-68.nip.io
+    - host: frontend.35-228-235-152.nip.io
       paths:
         - path: /
           pathType: Prefix

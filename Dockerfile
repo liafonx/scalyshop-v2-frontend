@@ -13,7 +13,7 @@ RUN npm install
 COPY . .
 
 # Set environment variables for the frontend to connect to the backend service
-ENV VITE_BACKEND_HOST="backend.34-88-48-68.nip.io"
+ENV VITE_BACKEND_HOST="backend.35-228-235-152.nip.io"
 ENV VITE_BACKEND_PORT=80
 ENV VITE_IMAGE_TAG=${VITE_IMAGE_TAG}
 
