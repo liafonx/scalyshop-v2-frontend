@@ -1,5 +1,7 @@
 FROM --platform=linux/amd64 node:lts-alpine
 
+ARG VITE_IMAGE_TAG
+
 # make the 'app' folder the current working directory
 WORKDIR /app
 
