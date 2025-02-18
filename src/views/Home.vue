@@ -68,8 +68,8 @@ export default {
   mounted() {
     this.getMessage();
 
-    if (process.env.VITE_IMAGE_TAG) {
-      console.log("VITE_IMAGE_TAG is:" + process.env.VITE_IMAGE_TAG);
+    if (import.meta.env.VITE_IMAGE_TAG) {
+      console.log("VITE_IMAGE_TAG is:" + import.meta.env.VITE_IMAGE_TAG);
     }
   },
   methods: {
