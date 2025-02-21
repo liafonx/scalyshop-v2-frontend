@@ -9,7 +9,7 @@ replicaCount: 3
 image:
 #  repository: registry.git.chalmers.se/courses/dat490/students/2025/dat490-2025-9/scalyshop-v2-frontend
   # This sets the pull policy for images.
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
 #  tag: "v1.0.0"
 
