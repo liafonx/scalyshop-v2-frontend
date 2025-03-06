@@ -24,15 +24,6 @@ build-job:
     - docker build --cache-from $CI_REGISTRY_IMAGE:latest -t $CI_REGISTRY_IMAGE:latest -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA .
     - docker push $CI_REGISTRY_IMAGE:latest
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
-    - |
-      docker images --format '{{.Repository}} {{.Tag}} {{.ID}}' | while read repo tag id; do
-        if [ "$tag" != "$CI_COMMIT_SHORT_SHA" ] && [ "$tag" != "latest" ]; then
-          echo "Removing image $repo:$tag ($id)"
-          docker rmi -f "$id"
-        else
-          echo "Keeping image $repo:$tag ($id)"
-        fi
-      done
   rules:
     - if: $CI_COMMIT_BRANCH == "frontend-local"
 

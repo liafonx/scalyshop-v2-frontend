@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 node:lts-alpine
+FROM node:lts-alpine
 
 # make the 'app' folder the current working directory
 WORKDIR /app
