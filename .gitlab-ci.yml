@@ -1,51 +1,43 @@
 image: alpine:latest
 
-variables:
-  AUTO_BUILD_IMAGE_VERSION: 'v4.3.0'
-  DOCKER_HOST: tcp://0.0.0.0:2375
-  DOCKER_DRIVER: overlay2
-  DOCKER_TLS_CERTDIR: ''
-
 stages:
   - build
+  # - test
   - deploy
 
-build-job:
-  stage: build
-  image: 'registry.gitlab.com/gitlab-org/cluster-integration/auto-build-image:${AUTO_BUILD_IMAGE_VERSION}'
-  services:
-    - name: 'docker:24.0.5-dind'
-      variables:
-        HEALTHCHECK_TCP_PORT: "2375"
-  before_script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-  script:
-    - docker pull $CI_REGISTRY_IMAGE:latest || true
-    - docker build --cache-from $CI_REGISTRY_IMAGE:latest -t $CI_REGISTRY_IMAGE:latest -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA .
-    - docker push $CI_REGISTRY_IMAGE:latest
-    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+.default_rules: &default_rules
   rules:
-    - if: $CI_COMMIT_BRANCH == "frontend-local"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_BRANCH == "feat-ci"
+    - if: $CI_COMMIT_BRANCH == "feat-ingress"
+    - if: $CI_COMMIT_BRANCH == "dev"
+  tags:
+    - test  # Only run on runners with this tag
 
-# test-job:
-#   TODO
-
-deploy-helm:
-  stage: deploy
-  image: dtzar/helm-kubectl
-  dependencies:
-    - build-job
-  before_script:
-    # Decode the base64-encoded kubeconfig from CI/CD variable and set it for kubectl/helm.
-    - echo "$KUBE_CONFIG" | base64 -d > kubeconfig
-    - export KUBECONFIG=$PWD/kubeconfig
+build-job:
+  <<: *default_rules
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:v1.23.2-debug
+    entrypoint: [""]
   script:
-    - echo "Deploying the application using Helm upgrade --install..."
-    - echo "Using image ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}"
+    - /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --build-arg VITE_IMAGE_TAG=${CI_COMMIT_SHORT_SHA}
+      --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
+      --custom-platform=linux/amd64
+      --destination "${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}"
+
+deploy-job:
+  <<: *default_rules
+  stage: deploy
+  image: alpine/helm:latest
+  script:
+    - echo "Deploying application with Helm..."
     - |
       helm upgrade --install scalyshop-frontend ./scalyshop-frontend \
         --set image.repository=$CI_REGISTRY_IMAGE \
-        --set image.tag=$CI_COMMIT_SHORT_SHA
-    - kubectl wait --for=condition=Available --timeout=60s deployment/scalyshop-frontend -n scalyshop
-  rules:
-    - if: $CI_COMMIT_BRANCH == "frontend-local"
+        --set image.tag=$CI_COMMIT_SHORT_SHA \
+        --namespace scalyshop \
+        --wait --timeout 300s --debug
+  when: on_success
