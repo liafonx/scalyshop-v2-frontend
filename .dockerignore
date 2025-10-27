@@ -1,0 +1,42 @@
+# Ignore node_modules to ensure fresh installation in container
+node_modules
+
+# Ignore dependency lock file (if you prefer fresh installs inside the container)
+package-lock.json
+
+# Ignore Git-related files
+.git
+.gitignore
+
+# Ignore CI/CD config
+.gitlab-ci.yml
+
+# Ignore logs and temp files
+logs
+*.log
+npm-debug.log
+yarn-error.log
+
+# Ignore environment files (if any)
+.env
+.env.*
+
+# Ignore build artifacts if not needed
+build
+
+# Ignore YAML files for CI/CD and Kubernetes that are not needed inside the container
+gitlab-runner-role.yaml
+runner-values.yaml
+mongodb-values.yaml
+k8s_manifest_files
+scalyshop-frontend
+
+# Ignore test and dummy data if not needed
+dummy_data
+stress_data
+tests
+
+# Ignore macOS-specific files
+.DS_Store
+
+docker-compose.yml

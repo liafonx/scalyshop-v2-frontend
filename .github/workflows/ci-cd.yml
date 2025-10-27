@@ -1,0 +1,134 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - frontend-local
+      - dev
+  pull_request:
+    branches:
+      - main
+      - frontend-local
+      - dev
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha,prefix=,format=short
+            type=ref,event=branch
+            type=ref,event=pr
+            type=raw,value=latest,enable={{is_default_branch}}
+      
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            VITE_BACKEND_HOST=backend.k8s.orb.local
+            VITE_BACKEND_PORT=80
+    
+    outputs:
+      image-tag: ${{ github.sha }}
+
+  # Uncomment this job when you're ready to enable testing
+  # test:
+  #   name: Run Tests
+  #   runs-on: ubuntu-latest
+  #   needs: build
+  #   
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+  #     
+  #     - name: Set up Node.js
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 'lts/*'
+  #         cache: 'npm'
+  #     
+  #     - name: Install dependencies
+  #       run: npm install
+  #     
+  #     - name: Run linter
+  #       run: npm run lint --if-present
+  #     
+  #     - name: Build
+  #       run: npm run build
+
+  deploy:
+    name: Deploy with Helm
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push'  # Only deploy on push, not on PRs
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: 'latest'
+      
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v4
+      
+      # You'll need to add these secrets to your GitHub repository:
+      # - KUBECONFIG or KUBE_CONFIG_DATA: Your Kubernetes config
+      - name: Configure kubectl
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBECONFIG }}" | base64 -d > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
+      
+      - name: Deploy with Helm
+        run: |
+          echo "Deploying application with Helm..."
+          helm upgrade --install scalyshop-frontend ./scalyshop-frontend \
+            --set image.repository=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} \
+            --set image.tag=${{ github.sha }} \
+            --namespace scalyshop \
+            --create-namespace \
+            --wait --timeout 60s --debug
+      
+      - name: Wait for deployment
+        run: |
+          kubectl wait --for=condition=Available --timeout=60s deployment/scalyshop-frontend -n scalyshop || true
+
