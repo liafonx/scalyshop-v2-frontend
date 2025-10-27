@@ -23,4 +23,4 @@ RUN npm run build
 CMD ["npm", "run", "serve"]
 
 # Example to run the Docker container:
-# docker run --name scalyshop-v2-frontend -p 80:80 -d ghcr.io/Liafonx/scalyshop-v2-frontend
+# docker run --name scalyshop-v2-frontend -p 80:80 -d registry.git.chalmers.se/courses/dat490/students/2025/dat490-2025-9/scalyshop-v2-frontend

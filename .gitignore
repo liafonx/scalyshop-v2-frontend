@@ -2,3 +2,7 @@ node_modules
 dist
 package-lock.json
 /.idea/
+.DS_Store
+
+# GitLab CI (no longer needed)
+.gitlab-ci.yml
